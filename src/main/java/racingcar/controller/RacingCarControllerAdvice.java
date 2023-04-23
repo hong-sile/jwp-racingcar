@@ -20,8 +20,8 @@ public class RacingCarControllerAdvice {
     private static final String UNEXPECTED_ERROR_MESSAGE = "네트워크 지연으로 다시 시도해주시기 바랍니다.";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> loggingUnExpectedException(final Exception e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> loggingUnExpectedException(final RuntimeException e) {
         logger.error(UNEXPECTED_ERROR_LOG_FORMAT, convertToString(e));
         return ResponseEntity.internalServerError()
                 .body(UNEXPECTED_ERROR_MESSAGE);
