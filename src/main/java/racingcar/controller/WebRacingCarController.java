@@ -4,6 +4,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ public class WebRacingCarController {
     }
 
     @PostMapping(path = "/plays")
-    public RacingCarGameResultDto playGame(@RequestBody final GameInitializeDto gameInitializeDto) {
+    public RacingCarGameResultDto playGame(@RequestBody @Valid final GameInitializeDto gameInitializeDto) {
         final RacingCarGameResultDto racingCarGameResult = racingCarService.playRound
                 (splitNames(gameInitializeDto.getNames()), gameInitializeDto.getCount());
         racingCarService.saveGameResult(racingCarGameResult);

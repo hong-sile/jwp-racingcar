@@ -2,9 +2,13 @@ package racingcar.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -26,6 +30,14 @@ public class RacingCarControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handle(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handle(final MethodArgumentNotValidException ex) {
+        final Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors()
+                .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
     }
 
     private String convertToString(final Exception e) {
